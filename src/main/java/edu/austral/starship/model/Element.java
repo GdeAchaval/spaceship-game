@@ -28,7 +28,7 @@ public abstract class Element implements Collisionable<Element> {
         return position;
     }
 
-    public void setPosition(Vector2 addedVector) {
+    protected void setPosition(Vector2 addedVector) {
         this.position = this.position.add(addedVector);
     }
 }

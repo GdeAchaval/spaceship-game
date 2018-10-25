@@ -28,7 +28,7 @@ public class Vector2 {
         return new Vector2(x / module, y / module);
     }
 
-    float angle() {return (float) (atan2(y, x) - atan2(0, 1));}
+    public float angle() {return (float) (atan2(y, x) - atan2(0, 1));}
 
     public static Vector2 vector(float x, float y) {return new Vector2(x, y);}
 
