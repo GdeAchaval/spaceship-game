@@ -33,7 +33,7 @@ public class ElementRendererVisitor implements Visitor {
         int height = asteroid.getShape().getBounds().height;
         int width = asteroid.getShape().getBounds().width;
         graphics.beginDraw();
-        graphics.image(this.asteroid, position.getX(), position.getY(), height*10, width*10);
+        graphics.image(this.asteroid, position.getX(), position.getY(), (float) (height*0.9), (float) (width*0.9));
         graphics.endDraw();
     }
 
@@ -52,11 +52,13 @@ public class ElementRendererVisitor implements Visitor {
         Vector2 position = spaceship.getPosition();
         graphics.beginDraw();
         int player = spaceship.getPlayer();
+        int size = spaceship.getShape().getBounds().width;
         if(player == 1) {
-            graphics.image(this.ss1, position.getX(), position.getY(), 75, 75);
+            // la imagen no deberia ser cuadrada, para asi poder usar correctamente el rectangle para definir size
+            graphics.image(this.ss1, position.getX(), position.getY(), size, size);
         }
         if (player == 2) {
-            graphics.image(this.ss2, position.getX(), position.getY(), 75, 75);
+            graphics.image(this.ss2, position.getX(), position.getY(), size, size);
         }
         graphics.endDraw();
     }
