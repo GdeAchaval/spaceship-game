@@ -1,8 +1,9 @@
 package edu.austral.starship.model.spaceship;
 
 
+import edu.austral.starship.Visitor;
 import edu.austral.starship.base.vector.Vector2;
-import edu.austral.starship.model.Element;
+import edu.austral.starship.model.GameObject;
 import edu.austral.starship.model.bullet.Bullet;
 import edu.austral.starship.model.weapon.CoreWeapon;
 import edu.austral.starship.model.weapon.Weapon;
@@ -14,25 +15,27 @@ import java.util.Queue;
 
 import static edu.austral.starship.CustomGameFramework.*;
 
-public class Spaceship extends Element {
+public class Spaceship extends GameObject {
 
     private Queue<Weapon> weapons;
+    private int player;
 
-    public Spaceship(Shape shape, Vector2 position) {
-        super(shape, position);
+    public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player) {
+        super(shape, position, collisionVisitor);
         this.weapons = new LinkedList<>();
         addWeapon(new CoreWeapon(this));
+        this.player = player;
     }
 
     public void moveForward() {
         if(super.getPosition().getX() < RIGHT_LIMIT) {
-            super.setPosition(Vector2.vector(8, 0));
+            super.setPosition(Vector2.vector(10, 0));
         }
     }
 
     public void moveBackward() {
         if(super.getPosition().getX() > LEFT_LIMIT) {
-            super.setPosition(Vector2.vector(-8, 0));
+            super.setPosition(Vector2.vector(-10, 0));
         }
     }
 
@@ -61,5 +64,14 @@ public class Spaceship extends Element {
 
     public void changeWeapon() {
         weapons.add(weapons.remove());
+    }
+
+    @Override
+    public void accepts(Visitor visitor) {
+        visitor.visitSpaceship(this);
+    }
+
+    public int getPlayer() {
+        return player;
     }
 }

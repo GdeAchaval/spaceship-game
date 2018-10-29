@@ -4,9 +4,14 @@ import edu.austral.starship.base.framework.GameFramework;
 import edu.austral.starship.base.framework.ImageLoader;
 import edu.austral.starship.base.framework.WindowSettings;
 import edu.austral.starship.base.vector.Vector2;
+import edu.austral.starship.collision.SpaceshipCollisionVisitor;
+import edu.austral.starship.controller.ElementController;
 import edu.austral.starship.controller.PlayerController;
 import edu.austral.starship.model.Player;
 import edu.austral.starship.model.spaceship.Spaceship;
+import edu.austral.starship.render.ElementRendererVisitor;
+import edu.austral.starship.render.PlayingRenderer;
+import edu.austral.starship.render.Renderer;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.event.KeyEvent;
@@ -23,6 +28,14 @@ public class CustomGameFramework implements GameFramework, Subject {
     private Player player2;
     private PImage ss2;
 
+    private PImage smallbullet;
+    private PImage bigbullet;
+    private PImage asteroid;
+    private PImage bg;
+
+    private Renderer playingRenderer;
+    private ElementController elementController;
+
     // origen arriba a la izquierda
     public static final int BOTTOM_LIMIT = 800;
     public static final int RIGHT_LIMIT = 1200;
@@ -38,15 +51,26 @@ public class CustomGameFramework implements GameFramework, Subject {
         windowsSettings.enableHighPixelDensity();
         windowsSettings.fullScreen();
 
-        this.player1 = new Player(new Spaceship(new Rectangle(10, 10, 10, 10), Vector2.vector(10, 10)));
-        this.player2 = new Player(new Spaceship(new Rectangle(1000, 10, 10, 10), Vector2.vector(1000, 10)));
+        Visitor ssCollisionVisitor = new SpaceshipCollisionVisitor();
 
-        Map<Integer, Runnable> commands1 = commandsPlayer1();
-        Map<Integer, Runnable> commands2 = commandsPlayer2();
-        observers.add(new PlayerController(this, this.player1, commands1));
-        observers.add(new PlayerController(this, this.player2, commands2));
-        this.ss1 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss1.png");
-        this.ss2 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss2.png");
+        Rectangle rect1 = new Rectangle(10, 10, 80, 55);
+        Rectangle rect2 = new Rectangle(500, 10, 80, 55);
+
+        Spaceship spaceship1 = new Spaceship(rect1, Vector2.vector(rect1.x, rect1.y), ssCollisionVisitor, 1);
+        Spaceship spaceship2 = new Spaceship(rect2, Vector2.vector(rect2.x, rect2.y), ssCollisionVisitor, 2);
+        this.player2 = new Player(spaceship2);
+        this.player1 = new Player(spaceship1);
+
+        observers.add(new PlayerController(this, this.player1, commandsPlayer1()));
+        observers.add(new PlayerController(this, this.player2, commandsPlayer2()));
+
+        loadImages(imageLoader);
+
+        this.elementController = new ElementController();
+        ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
+        this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController);
+        elementController.addGameObject(spaceship1);
+        elementController.addGameObject(spaceship2);
     }
 
     private Map<Integer, Runnable> commandsPlayer1() {
@@ -71,23 +95,29 @@ public class CustomGameFramework implements GameFramework, Subject {
         return commands2;
     }
 
+    private void loadImages(ImageLoader imageLoader) {
+        this.ss1 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss1.png");
+        this.ss2 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss2.png");
+        this.smallbullet = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/smallbullet.png");
+        this.bigbullet = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/bigbullet.png");
+        this.asteroid = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/asteroid.png");
+        this.bg = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/bg.png");
+    }
+
     @Override
     public void draw(PGraphics graphics, float timeSinceLastDraw, Set<Integer> keySet) {
-        drawSS1(graphics);
-        drawSS2(graphics);
+        control();
+        loadBG(graphics);
+        playingRenderer.render(graphics);
     }
 
-    private void drawSS1(PGraphics graphics) {
-        Vector2 position = player1.getSpaceship().getPosition();
-        graphics.beginDraw();
-        graphics.image(this.ss1, position.getX(), position.getY(), 85, 85);
-        graphics.endDraw();
+    private void control() {
+        elementController.control();
     }
 
-    private void drawSS2(PGraphics graphics) {
-        Vector2 position = player2.getSpaceship().getPosition();
+    private void loadBG(PGraphics graphics) {
         graphics.beginDraw();
-        graphics.image(this.ss2, position.getX(), position.getY(), 85, 85);
+        graphics.image(this.bg, 0, 0, 2048, 1152);
         graphics.endDraw();
     }
 
