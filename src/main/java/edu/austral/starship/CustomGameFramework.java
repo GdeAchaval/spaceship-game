@@ -56,8 +56,8 @@ public class CustomGameFramework implements GameFramework, Subject {
         Rectangle rect1 = new Rectangle(10, 10, 80, 55);
         Rectangle rect2 = new Rectangle(500, 10, 80, 55);
 
-        Spaceship spaceship1 = new Spaceship(rect1, Vector2.vector(rect1.x, rect1.y), ssCollisionVisitor, 1);
-        Spaceship spaceship2 = new Spaceship(rect2, Vector2.vector(rect2.x, rect2.y), ssCollisionVisitor, 2);
+        Spaceship spaceship1 = new Spaceship(rect1, Vector2.vector(rect1.x + (rect1.width / 2), rect1.y + (rect1.height / 2)), ssCollisionVisitor, 1);
+        Spaceship spaceship2 = new Spaceship(rect2, Vector2.vector(rect2.x + (rect2.width / 2), rect2.y + (rect2.height / 2)), ssCollisionVisitor, 2);
         this.player2 = new Player(spaceship2);
         this.player1 = new Player(spaceship1);
 
@@ -116,9 +116,10 @@ public class CustomGameFramework implements GameFramework, Subject {
     }
 
     private void loadBG(PGraphics graphics) {
-        graphics.beginDraw();
-        graphics.image(this.bg, 0, 0, 2048, 1152);
-        graphics.endDraw();
+        //graphics.beginDraw();
+        graphics.background(255, 255, 255);
+        //graphics.image(this.bg, 0, 0, 2048, 1152);
+        //graphics.endDraw();
     }
 
     @Override

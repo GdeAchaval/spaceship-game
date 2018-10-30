@@ -10,7 +10,7 @@ import edu.austral.starship.model.spaceship.Spaceship;
 public class AsteroidCollisionVisitor implements Visitor {
     @Override
     public void visitAsteroid(Asteroid asteroid) {
-
+        asteroid.destroy();
     }
 
     @Override

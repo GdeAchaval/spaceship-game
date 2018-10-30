@@ -29,25 +29,29 @@ public class Spaceship extends GameObject {
 
     public void moveForward() {
         if(super.getPosition().getX() < RIGHT_LIMIT) {
-            super.setPosition(Vector2.vector(10, 0));
+            super.addPosition(Vector2.vector(10, 0));
+            super.changeDirection(Vector2.vector(1, 0));
         }
     }
 
     public void moveBackward() {
         if(super.getPosition().getX() > LEFT_LIMIT) {
-            super.setPosition(Vector2.vector(-10, 0));
+            super.addPosition(Vector2.vector(-10, 0));
+            super.changeDirection(Vector2.vector(-1, 0));
         }
     }
 
     public void moveUpwards() {
         if(super.getPosition().getY() > TOP_LIMIT) {
-            super.setPosition(Vector2.vector(0, -8));
+            super.addPosition(Vector2.vector(0, -8));
+            super.changeDirection(Vector2.vector(0, -1));
         }
     }
 
     public void moveDownwards() {
         if(super.getPosition().getY() < BOTTOM_LIMIT) {
-            super.setPosition(Vector2.vector(0, 8));
+            super.addPosition(Vector2.vector(0, 8));
+            super.changeDirection(Vector2.vector(0, 1));
         }
     }
 

@@ -69,11 +69,12 @@ public class ElementController implements Subject {
         if (random.nextInt(75) == 1) {
             int posX = random.nextInt(BOTTOM_LIMIT);
             int posY = random.nextInt(RIGHT_LIMIT);
-            int size = 60 + random.nextInt(60);
+            int size = 50 + random.nextInt(60);
+            int angle = random.nextInt(360);
             Vector2 pos = Vector2.vector(posX, posY);
             // un collision visitor, no hace falta n instancias...
-            addGameObject(new Asteroid(new Rectangle(posX, posY, size, size), pos, new AsteroidCollisionVisitor()));
-
+            Rectangle rectangle = new Rectangle(posX - size / 2, posY - size / 2, size, size);
+            addGameObject(new Asteroid(rectangle, pos, new AsteroidCollisionVisitor(), Vector2.vectorFromModule(1, angle)));
         }
     }
 
