@@ -20,7 +20,7 @@ public class AsteroidCollisionVisitor implements Visitor {
 
     @Override
     public void visitSmallBullet(SmallBullet smallBullet) {
-
+        smallBullet.destroy();
     }
 
     @Override

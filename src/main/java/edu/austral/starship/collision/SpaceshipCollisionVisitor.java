@@ -16,16 +16,16 @@ public class SpaceshipCollisionVisitor implements Visitor {
 
     @Override
     public void visitBigBullet(BigBullet bigBullet) {
-
+        bigBullet.destroy();
     }
 
     @Override
     public void visitSmallBullet(SmallBullet smallBullet) {
-
+        smallBullet.destroy();
     }
 
     @Override
     public void visitSpaceship(Spaceship spaceship) {
-        System.out.println("CRASH");
+        spaceship.hit(1);
     }
 }
