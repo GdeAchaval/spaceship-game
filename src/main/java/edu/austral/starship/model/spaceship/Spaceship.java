@@ -5,6 +5,7 @@ import edu.austral.starship.Visitor;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.controller.ElementController;
 import edu.austral.starship.model.GameObject;
+import edu.austral.starship.model.bullet.Bullet;
 import edu.austral.starship.model.weapon.CoreWeapon;
 import edu.austral.starship.model.weapon.Weapon;
 
@@ -20,16 +21,22 @@ public class Spaceship extends GameObject {
 
     private Queue<Weapon> weapons;
     private int player;
-    private ElementController elementController;
     private int health;
 
 
-    public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player, ElementController elemCont) {
+    public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player) {
         super(shape, position, collisionVisitor);
         this.weapons = new LinkedList<>();
         addWeapon(new CoreWeapon(this));
         this.player = player;
-        this.elementController = elemCont;
+        this.health = INITIAL_HEALTH;
+    }
+
+    public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player, Vector2 direction) {
+        super(shape, position, collisionVisitor, direction);
+        this.weapons = new LinkedList<>();
+        addWeapon(new CoreWeapon(this));
+        this.player = player;
         this.health = INITIAL_HEALTH;
     }
 
@@ -65,10 +72,11 @@ public class Spaceship extends GameObject {
         weapons.add(weapon);
     }
 
-    public void shoot() {
+    public Bullet shoot() {
         if (!weapons.isEmpty()) {
-            this.elementController.addGameObject(weapons.peek().shoot());
+            return weapons.peek().shoot();
         }
+        return null;
     }
 
     public void changeWeapon() {

@@ -76,6 +76,6 @@ public class PlayingRenderer implements Renderer {
         for (int i = 0; i < health; i+=INITIAL_HEALTH/5) {
             text = text.concat("❤");
         }
-        graphics.text(text, RIGHT_LIMIT-100, 22);
+        graphics.text(text, RIGHT_LIMIT-130, 22);
     }
 }
