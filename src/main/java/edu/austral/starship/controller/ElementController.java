@@ -55,9 +55,9 @@ public class ElementController implements Subject {
 
     public void control() {
         updateElements();
-        checkCollisions();
         move();
         spawn();
+        checkCollisions();
     }
 
     private void move() {

@@ -32,7 +32,7 @@ public class PhysicsVisitor implements Visitor {
                 position.getX() > LEFT_LIMIT &&
                 position.getY() < BOTTOM_LIMIT &&
                 position.getY() > TOP_LIMIT) {
-            bigBullet.addPosition(bigBullet.getDirection().multiply(2f));
+            bigBullet.addPosition(bigBullet.getDirection().multiply(4f));
         } else {
             bigBullet.destroy();
         }
@@ -45,7 +45,7 @@ public class PhysicsVisitor implements Visitor {
                 position.getX() > LEFT_LIMIT &&
                 position.getY() < BOTTOM_LIMIT &&
                 position.getY() > TOP_LIMIT) {
-            smallBullet.addPosition(smallBullet.getDirection().multiply(4f));
+            smallBullet.addPosition(smallBullet.getDirection().multiply(8f));
         } else {
             smallBullet.destroy();
         }

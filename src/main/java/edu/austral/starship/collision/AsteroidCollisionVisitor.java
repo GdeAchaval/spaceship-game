@@ -25,6 +25,7 @@ public class AsteroidCollisionVisitor implements Visitor {
 
     @Override
     public void visitSpaceship(Spaceship spaceship) {
-
+        spaceship.hit(20);
+        if(spaceship.getHealth() <= 0) spaceship.destroy();
     }
 }

@@ -53,9 +53,6 @@ public abstract class GameObject implements Collisionable<GameObject>, Element {
                 (int) this.position.getY() - bounds.height / 2,
                 bounds.width,
                 bounds.height);
-//        AffineTransform af = new AffineTransform();
-//        af.rotate(direction.angle());
-//        this.shape = af.createTransformedShape(rectangle);
     }
 
     public boolean isActive() {

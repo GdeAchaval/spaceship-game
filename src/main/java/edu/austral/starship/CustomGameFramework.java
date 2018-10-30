@@ -41,7 +41,7 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     // origen arriba a la izquierda
     public static final int BOTTOM_LIMIT = 800;
-    public static final int RIGHT_LIMIT = 1200;
+    public static final int RIGHT_LIMIT = 1250;
     public static final int LEFT_LIMIT = 0;
     public static final int TOP_LIMIT = 0;
 
@@ -63,7 +63,7 @@ public class CustomGameFramework implements GameFramework, Subject {
         Visitor ssCollisionVisitor = new SpaceshipCollisionVisitor();
 
         Rectangle rect1 = new Rectangle(10, 10, 80, 55);
-        Rectangle rect2 = new Rectangle(500, 10, 80, 55);
+        Rectangle rect2 = new Rectangle(1000, 10, 80, 55);
 
         Spaceship spaceship1 = new Spaceship(
                 rect1,
@@ -89,7 +89,7 @@ public class CustomGameFramework implements GameFramework, Subject {
         loadImages(imageLoader);
 
         ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
-        this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController);
+        this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController, player1, player2);
         this.pauseRenderer = new PauseRenderer();
 
         elementController.addGameObject(spaceship1);

@@ -29,5 +29,6 @@ public class SmallBulletCollisionVisitor implements Visitor {
     @Override
     public void visitSpaceship(Spaceship spaceship) {
         spaceship.hit(SMALLB_DAMAGE);
+        if(spaceship.getHealth() <= 0) spaceship.destroy();
     }
 }

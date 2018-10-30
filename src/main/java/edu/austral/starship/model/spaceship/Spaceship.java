@@ -16,7 +16,7 @@ import static edu.austral.starship.CustomGameFramework.*;
 
 public class Spaceship extends GameObject {
 
-    private final static int INITIAL_HEALTH = 100;
+    public final static int INITIAL_HEALTH = 1000;
 
     private Queue<Weapon> weapons;
     private int player;
@@ -36,28 +36,28 @@ public class Spaceship extends GameObject {
     public void moveForward() {
         if (super.getPosition().getX() < RIGHT_LIMIT) {
             super.addPosition(Vector2.vector(15, 0));
-            super.changeDirection(Vector2.vector(1, 0));
+            super.changeDirection(Vector2.vector(0.5f, 0));
         }
     }
 
     public void moveBackward() {
         if (super.getPosition().getX() > LEFT_LIMIT) {
             super.addPosition(Vector2.vector(-15, 0));
-            super.changeDirection(Vector2.vector(-1, 0));
+            super.changeDirection(Vector2.vector(-0.5f, 0));
         }
     }
 
     public void moveUpwards() {
-        if (super.getPosition().getY() > TOP_LIMIT) {
+        if (super.getPosition().getY() > TOP_LIMIT+70) {
             super.addPosition(Vector2.vector(0, -15));
-            super.changeDirection(Vector2.vector(0, -1));
+            super.changeDirection(Vector2.vector(0, -0.5f));
         }
     }
 
     public void moveDownwards() {
         if (super.getPosition().getY() < BOTTOM_LIMIT) {
             super.addPosition(Vector2.vector(0, 15));
-            super.changeDirection(Vector2.vector(0, 1));
+            super.changeDirection(Vector2.vector(0, 0.5f));
         }
     }
 
@@ -78,6 +78,10 @@ public class Spaceship extends GameObject {
     public void hit(int damage) {
         this.health -= damage;
         if(damage <= 0) destroy();
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     @Override

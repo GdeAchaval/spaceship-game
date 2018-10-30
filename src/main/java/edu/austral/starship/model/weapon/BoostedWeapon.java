@@ -22,7 +22,7 @@ public class BoostedWeapon extends WeaponDecorator {
         Vector2 direction = super.spaceship.getDirection();
         return new BigBullet(
                 new Rectangle((int) position.getX(), (int) position.getY(), 20, 13),
-                position,
+                position.add(direction.multiply(60f)),
                 new BigBulletCollisionVisitor(),
                 direction);
     }
