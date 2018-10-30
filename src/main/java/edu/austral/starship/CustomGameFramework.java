@@ -7,11 +7,11 @@ import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.collision.SpaceshipCollisionVisitor;
 import edu.austral.starship.controller.ElementController;
 import edu.austral.starship.controller.PlayerController;
-import edu.austral.starship.model.GameObject;
 import edu.austral.starship.model.Player;
 import edu.austral.starship.model.spaceship.Spaceship;
 import edu.austral.starship.model.weapon.BoostedWeapon;
 import edu.austral.starship.render.ElementRendererVisitor;
+import edu.austral.starship.render.PauseRenderer;
 import edu.austral.starship.render.PlayingRenderer;
 import edu.austral.starship.render.Renderer;
 import processing.core.PGraphics;
@@ -36,6 +36,7 @@ public class CustomGameFramework implements GameFramework, Subject {
     private PImage bg;
 
     private Renderer playingRenderer;
+    private Renderer pauseRenderer;
     private ElementController elementController;
 
     // origen arriba a la izquierda
@@ -43,6 +44,8 @@ public class CustomGameFramework implements GameFramework, Subject {
     public static final int RIGHT_LIMIT = 1200;
     public static final int LEFT_LIMIT = 0;
     public static final int TOP_LIMIT = 0;
+
+    private GameState state;
 
     public CustomGameFramework() {
         this.observers = new ArrayList<>();
@@ -52,6 +55,8 @@ public class CustomGameFramework implements GameFramework, Subject {
     public void setup(WindowSettings windowsSettings, ImageLoader imageLoader) {
         windowsSettings.enableHighPixelDensity();
         windowsSettings.fullScreen();
+
+        this.state = GameState.PLAYING;
 
         this.elementController = new ElementController();
 
@@ -66,7 +71,7 @@ public class CustomGameFramework implements GameFramework, Subject {
                 ssCollisionVisitor,
                 1,
                 elementController
-                );
+        );
         spaceship1.addWeapon(new BoostedWeapon(spaceship1));
         Spaceship spaceship2 = new Spaceship(
                 rect2,
@@ -85,6 +90,8 @@ public class CustomGameFramework implements GameFramework, Subject {
 
         ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
         this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController);
+        this.pauseRenderer = new PauseRenderer();
+
         elementController.addGameObject(spaceship1);
         elementController.addGameObject(spaceship2);
     }
@@ -97,6 +104,7 @@ public class CustomGameFramework implements GameFramework, Subject {
         commands1.put(java.awt.event.KeyEvent.VK_UP, player1.getSpaceship()::moveUpwards);
         commands1.put(java.awt.event.KeyEvent.VK_SHIFT, player1.getSpaceship()::changeWeapon);
         commands1.put(java.awt.event.KeyEvent.VK_SPACE, player1.getSpaceship()::shoot);
+        commands1.put(java.awt.event.KeyEvent.VK_P, this::pause);
         return commands1;
     }
 
@@ -108,6 +116,7 @@ public class CustomGameFramework implements GameFramework, Subject {
         commands2.put(java.awt.event.KeyEvent.VK_W, player2.getSpaceship()::moveUpwards);
         commands2.put(java.awt.event.KeyEvent.VK_SHIFT, player2.getSpaceship()::changeWeapon);
         commands2.put(java.awt.event.KeyEvent.VK_F, player2.getSpaceship()::shoot);
+        commands2.put(java.awt.event.KeyEvent.VK_Q, this::pause);
         return commands2;
     }
 
@@ -122,9 +131,17 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     @Override
     public void draw(PGraphics graphics, float timeSinceLastDraw, Set<Integer> keySet) {
-        control();
-        loadBG(graphics);
-        playingRenderer.render(graphics);
+        switch (this.state) {
+            case PLAYING:
+                control();
+                loadBG(graphics);
+                playingRenderer.render(graphics);
+                break;
+            case PAUSE:
+                pauseRenderer.render(graphics);
+                break;
+        }
+
     }
 
     private void control() {
@@ -166,5 +183,13 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     public int getKeyCode() {
         return keyCode;
+    }
+
+    private void pause() {
+        if (this.state == GameState.PLAYING) {
+            this.state = GameState.PAUSE;
+        } else {
+            this.state = GameState.PLAYING;
+        }
     }
 }
