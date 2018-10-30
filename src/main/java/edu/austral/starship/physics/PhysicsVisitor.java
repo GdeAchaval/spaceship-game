@@ -27,12 +27,28 @@ public class PhysicsVisitor implements Visitor {
 
     @Override
     public void visitBigBullet(BigBullet bigBullet) {
-
+        Vector2 position = bigBullet.getPosition();
+        if (position.getX() < RIGHT_LIMIT &&
+                position.getX() > LEFT_LIMIT &&
+                position.getY() < BOTTOM_LIMIT &&
+                position.getY() > TOP_LIMIT) {
+            bigBullet.addPosition(bigBullet.getDirection().multiply(2f));
+        } else {
+            bigBullet.destroy();
+        }
     }
 
     @Override
     public void visitSmallBullet(SmallBullet smallBullet) {
-
+        Vector2 position = smallBullet.getPosition();
+        if (position.getX() < RIGHT_LIMIT &&
+                position.getX() > LEFT_LIMIT &&
+                position.getY() < BOTTOM_LIMIT &&
+                position.getY() > TOP_LIMIT) {
+            smallBullet.addPosition(smallBullet.getDirection().multiply(4f));
+        } else {
+            smallBullet.destroy();
+        }
     }
 
     @Override

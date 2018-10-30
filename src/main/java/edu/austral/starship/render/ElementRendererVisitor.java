@@ -3,6 +3,7 @@ package edu.austral.starship.render;
 import edu.austral.starship.Visitor;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.Asteroid;
+import edu.austral.starship.model.GameObject;
 import edu.austral.starship.model.bullet.BigBullet;
 import edu.austral.starship.model.bullet.SmallBullet;
 import edu.austral.starship.model.spaceship.Spaceship;
@@ -40,18 +41,39 @@ public class ElementRendererVisitor implements Visitor {
         int height = bounds.height;
         graphics.beginDraw();
         drawBounds(x, y, width, height);
-        graphics.image(this.asteroid, position.getX(), position.getY(), (float) (height*0.95), (float) (width*0.95));
+        graphics.image(this.asteroid, position.getX(), position.getY(), (float) (height * 0.95), (float) (width * 0.95));
         graphics.endDraw();
     }
 
     @Override
     public void visitBigBullet(BigBullet bigBullet) {
-
+        Vector2 position = bigBullet.getPosition();
+        Rectangle bounds = bigBullet.getShape().getBounds();
+        int x = bounds.x;
+        int y = bounds.y;
+        int width = bounds.width;
+        int height = bounds.height;
+        graphics.beginDraw();
+        drawBounds(x, y, width, height);
+        rotate(bigBullet, position, width * 3, height * 3, this.bigbullet);
+        graphics.endDraw();
     }
 
     @Override
     public void visitSmallBullet(SmallBullet smallBullet) {
+        Vector2 position = smallBullet.getPosition();
+        Rectangle bounds = smallBullet.getShape().getBounds();
+        int x = bounds.x;
+        int y = bounds.y;
+        int width = bounds.width;
+        int height = bounds.height;
 
+        graphics.beginDraw();
+
+        drawBounds(x, y, width, height);
+        rotate(smallBullet, position, width * 13, height * 13, this.smallbullet);
+
+        graphics.endDraw();
     }
 
     @Override
@@ -74,7 +96,7 @@ public class ElementRendererVisitor implements Visitor {
         graphics.translate(position.getX(), position.getY());
         graphics.rotate(spaceship.getDirection().angle());
 
-        if(player == 1) {
+        if (player == 1) {
             graphics.image(this.ss1, 0, 0, width, width); //image is square
         }
         if (player == 2) {
@@ -94,5 +116,15 @@ public class ElementRendererVisitor implements Visitor {
         graphics.point(x + width, y);
         graphics.point(x, y + height);
         graphics.point(x + width, y + height);
+    }
+
+    private void rotate(GameObject gameObject, Vector2 position, int width, int height, PImage image) {
+        graphics.pushMatrix();
+        graphics.imageMode(PConstants.CENTER);
+        graphics.translate(position.getX(), position.getY());
+        graphics.rotate(gameObject.getDirection().angle());
+        graphics.image(image, 0, 0, height, width);
+        graphics.endDraw();
+        graphics.popMatrix();
     }
 }

@@ -7,8 +7,10 @@ import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.collision.SpaceshipCollisionVisitor;
 import edu.austral.starship.controller.ElementController;
 import edu.austral.starship.controller.PlayerController;
+import edu.austral.starship.model.GameObject;
 import edu.austral.starship.model.Player;
 import edu.austral.starship.model.spaceship.Spaceship;
+import edu.austral.starship.model.weapon.BoostedWeapon;
 import edu.austral.starship.render.ElementRendererVisitor;
 import edu.austral.starship.render.PlayingRenderer;
 import edu.austral.starship.render.Renderer;
@@ -51,13 +53,28 @@ public class CustomGameFramework implements GameFramework, Subject {
         windowsSettings.enableHighPixelDensity();
         windowsSettings.fullScreen();
 
+        this.elementController = new ElementController();
+
         Visitor ssCollisionVisitor = new SpaceshipCollisionVisitor();
 
         Rectangle rect1 = new Rectangle(10, 10, 80, 55);
         Rectangle rect2 = new Rectangle(500, 10, 80, 55);
 
-        Spaceship spaceship1 = new Spaceship(rect1, Vector2.vector(rect1.x + (rect1.width / 2), rect1.y + (rect1.height / 2)), ssCollisionVisitor, 1);
-        Spaceship spaceship2 = new Spaceship(rect2, Vector2.vector(rect2.x + (rect2.width / 2), rect2.y + (rect2.height / 2)), ssCollisionVisitor, 2);
+        Spaceship spaceship1 = new Spaceship(
+                rect1,
+                Vector2.vector(rect1.x + (rect1.width / 2), rect1.y + (rect1.height / 2)),
+                ssCollisionVisitor,
+                1,
+                elementController
+                );
+        spaceship1.addWeapon(new BoostedWeapon(spaceship1));
+        Spaceship spaceship2 = new Spaceship(
+                rect2,
+                Vector2.vector(rect2.x + (rect2.width / 2), rect2.y + (rect2.height / 2)),
+                ssCollisionVisitor,
+                2,
+                elementController);
+
         this.player2 = new Player(spaceship2);
         this.player1 = new Player(spaceship1);
 
@@ -66,7 +83,6 @@ public class CustomGameFramework implements GameFramework, Subject {
 
         loadImages(imageLoader);
 
-        this.elementController = new ElementController();
         ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
         this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController);
         elementController.addGameObject(spaceship1);

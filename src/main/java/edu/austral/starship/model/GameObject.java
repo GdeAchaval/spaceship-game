@@ -6,7 +6,6 @@ import edu.austral.starship.base.collision.Collisionable;
 import edu.austral.starship.base.vector.Vector2;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 
 public abstract class GameObject implements Collisionable<GameObject>, Element {
@@ -63,11 +62,7 @@ public abstract class GameObject implements Collisionable<GameObject>, Element {
         return active;
     }
 
-    void setNonActive() {
-        this.active = false;
-    }
-
-    public void changeDirection(Vector2 vector) {
+    protected void changeDirection(Vector2 vector) {
         float angle = this.direction.add(vector).angle();
         this.direction = Vector2.vectorFromModule(1, angle);
     }
@@ -75,4 +70,9 @@ public abstract class GameObject implements Collisionable<GameObject>, Element {
     public Vector2 getDirection() {
         return direction;
     }
+
+    public void destroy() {
+        this.active = false;
+    }
+
 }

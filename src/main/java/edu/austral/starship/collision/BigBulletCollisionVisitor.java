@@ -8,9 +8,12 @@ import edu.austral.starship.model.spaceship.Spaceship;
 
 
 public class BigBulletCollisionVisitor implements Visitor {
+
+    private final static int BIGB_DAMAGE = 100;
+
     @Override
     public void visitAsteroid(Asteroid asteroid) {
-
+        asteroid.destroy();
     }
 
     @Override
@@ -20,11 +23,11 @@ public class BigBulletCollisionVisitor implements Visitor {
 
     @Override
     public void visitSmallBullet(SmallBullet smallBullet) {
-
+        smallBullet.destroy();
     }
 
     @Override
     public void visitSpaceship(Spaceship spaceship) {
-
+        spaceship.hit(BIGB_DAMAGE);
     }
 }

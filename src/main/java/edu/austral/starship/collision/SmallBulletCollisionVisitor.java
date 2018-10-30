@@ -8,9 +8,12 @@ import edu.austral.starship.model.spaceship.Spaceship;
 
 
 public class SmallBulletCollisionVisitor implements Visitor {
+
+    private final static int SMALLB_DAMAGE = 50;
+
     @Override
     public void visitAsteroid(Asteroid asteroid) {
-
+        asteroid.destroy();
     }
 
     @Override
@@ -25,6 +28,6 @@ public class SmallBulletCollisionVisitor implements Visitor {
 
     @Override
     public void visitSpaceship(Spaceship spaceship) {
-
+        spaceship.hit(SMALLB_DAMAGE);
     }
 }

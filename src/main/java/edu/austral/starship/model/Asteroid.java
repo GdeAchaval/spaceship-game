@@ -20,8 +20,4 @@ public class Asteroid extends GameObject {
     public void accepts(Visitor visitor) {
         visitor.visitAsteroid(this);
     }
-
-    public void destroy() {
-        super.setNonActive();
-    }
 }
