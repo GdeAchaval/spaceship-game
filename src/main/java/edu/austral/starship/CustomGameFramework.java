@@ -80,8 +80,8 @@ public class CustomGameFramework implements GameFramework, Subject {
         this.player2 = new Player(spaceship2);
         this.player1 = new Player(spaceship1);
 
-        spaceship1.addWeapon(new CoreWeapon(spaceship1, player1));
         spaceship1.addWeapon(new BoostedWeapon(spaceship1, player1));
+        spaceship1.addWeapon(new CoreWeapon(spaceship1, player1));
         spaceship2.addWeapon(new CoreWeapon(spaceship2, player2));
         spaceship2.addWeapon(new RapidFireWeapon(spaceship2, player2));
 
@@ -92,8 +92,8 @@ public class CustomGameFramework implements GameFramework, Subject {
         ShootUtil shootUtilPlayer1 = new ShootUtil(elementController, player1);
         ShootUtil shootUtilPlayer2 = new ShootUtil(elementController, player2);
 
-        PlayerController playerController = new PlayerController(this, this.player1, commandsPlayer1(shootUtilPlayer1));
-        PlayerController playerController2 = new PlayerController(this, this.player2, commandsPlayer2(shootUtilPlayer2));
+        PlayerController playerController = new PlayerController(this, commandsPlayer1(shootUtilPlayer1));
+        PlayerController playerController2 = new PlayerController(this, commandsPlayer2(shootUtilPlayer2));
 
         observers.add(playerController);
         observers.add(playerController2);
@@ -179,12 +179,12 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     private Map<Integer, Runnable> commandsPlayer2(ShootUtil shootUtil) {
         Map<Integer, Runnable> commands2 = new HashMap<>();
-        commands2.put(java.awt.event.KeyEvent.VK_D, player2.getSpaceship()::moveForward);
-        commands2.put(java.awt.event.KeyEvent.VK_A, player2.getSpaceship()::moveBackward);
-        commands2.put(java.awt.event.KeyEvent.VK_S, player2.getSpaceship()::moveDownwards);
-        commands2.put(java.awt.event.KeyEvent.VK_W, player2.getSpaceship()::moveUpwards);
-        commands2.put(java.awt.event.KeyEvent.VK_SHIFT, player2.getSpaceship()::changeWeapon);
-        commands2.put(java.awt.event.KeyEvent.VK_F, shootUtil);
+        commands2.put(java.awt.event.KeyEvent.VK_1, player2.getSpaceship()::moveForward);
+        commands2.put(java.awt.event.KeyEvent.VK_2, player2.getSpaceship()::moveBackward);
+        commands2.put(java.awt.event.KeyEvent.VK_3, player2.getSpaceship()::moveDownwards);
+        commands2.put(java.awt.event.KeyEvent.VK_4, player2.getSpaceship()::moveUpwards);
+        commands2.put(java.awt.event.KeyEvent.VK_TAB, player2.getSpaceship()::changeWeapon);
+        commands2.put(java.awt.event.KeyEvent.VK_5, shootUtil);
         commands2.put(java.awt.event.KeyEvent.VK_Q, this::pause);
         return commands2;
     }

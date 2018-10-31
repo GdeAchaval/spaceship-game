@@ -21,7 +21,7 @@ public class CoreWeapon extends Weapon {
     public Bullet shoot() {
         long lastFired = super.lastFired;
         long elapsedTime = System.currentTimeMillis() - lastFired;
-        if(elapsedTime > FIRE_RATE_CORE) {
+        if (elapsedTime > FIRE_RATE_CORE) {
             Vector2 position = super.spaceship.getPosition();
             Vector2 direction = super.spaceship.getDirection();
             super.lastFired = System.currentTimeMillis();
