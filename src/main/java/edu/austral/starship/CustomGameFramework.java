@@ -13,10 +13,7 @@ import edu.austral.starship.model.spaceship.Spaceship;
 import edu.austral.starship.model.weapon.BoostedWeapon;
 import edu.austral.starship.model.weapon.CoreWeapon;
 import edu.austral.starship.model.weapon.RapidFireWeapon;
-import edu.austral.starship.render.ElementRendererVisitor;
-import edu.austral.starship.render.PauseRenderer;
-import edu.austral.starship.render.PlayingRenderer;
-import edu.austral.starship.render.Renderer;
+import edu.austral.starship.render.*;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.event.KeyEvent;
@@ -40,6 +37,7 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     private Renderer playingRenderer;
     private Renderer pauseRenderer;
+    private Renderer gameOverRenderer;
     private ElementController elementController;
 
     // origen arriba a la izquierda
@@ -103,6 +101,7 @@ public class CustomGameFramework implements GameFramework, Subject {
         ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
         this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController, player1, player2);
         this.pauseRenderer = new PauseRenderer();
+        this.gameOverRenderer = new GameOverRenderer(player1, player2);
     }
 
     @Override
@@ -116,8 +115,10 @@ public class CustomGameFramework implements GameFramework, Subject {
             case PAUSE:
                 pauseRenderer.render(graphics);
                 break;
+            case GAME_OVER:
+                gameOverRenderer.render(graphics);
+                break;
         }
-
     }
 
     @Override
@@ -151,6 +152,9 @@ public class CustomGameFramework implements GameFramework, Subject {
     }
 
     private void control() {
+        if (player1.getSpaceship().getHealth() <= 0 || player2.getSpaceship().getHealth() <= 0) {
+            this.state = GameState.GAME_OVER;
+        }
         elementController.control();
     }
 
@@ -197,7 +201,7 @@ public class CustomGameFramework implements GameFramework, Subject {
     private void pause() {
         if (this.state == GameState.PLAYING) {
             this.state = GameState.PAUSE;
-        } else {
+        } else if (this.state == GameState.PAUSE) {
             this.state = GameState.PLAYING;
         }
     }

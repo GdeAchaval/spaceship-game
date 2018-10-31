@@ -5,7 +5,6 @@ import edu.austral.starship.Visitor;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.GameObject;
 import edu.austral.starship.model.bullet.Bullet;
-import edu.austral.starship.model.weapon.CoreWeapon;
 import edu.austral.starship.model.weapon.Weapon;
 
 import java.awt.*;
@@ -44,7 +43,7 @@ public class Spaceship extends GameObject {
     }
 
     public void moveUpwards() {
-        if (super.getPosition().getY() > TOP_LIMIT + 70) {
+        if (super.getPosition().getY() > TOP_LIMIT + 90) {
             super.addPosition(Vector2.vector(0, -15));
             super.changeDirection(Vector2.vector(0, -0.5f));
         }

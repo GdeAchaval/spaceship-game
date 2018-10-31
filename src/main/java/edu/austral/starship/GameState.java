@@ -2,5 +2,5 @@ package edu.austral.starship;
 
 
 public enum GameState {
-    PLAYING, PAUSE
+    PLAYING, PAUSE, GAME_OVER
 }
