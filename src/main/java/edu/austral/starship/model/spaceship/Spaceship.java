@@ -16,6 +16,7 @@ import static edu.austral.starship.CustomGameFramework.*;
 public class Spaceship extends GameObject {
 
     public final static int INITIAL_HEALTH = 1000;
+    private static long timeLastChange = 0;
 
     private Queue<Weapon> weapons;
     private int player;
@@ -30,28 +31,28 @@ public class Spaceship extends GameObject {
 
     public void moveForward() {
         if (super.getPosition().getX() < RIGHT_LIMIT) {
-            super.addPosition(Vector2.vector(15, 0));
+            super.addPosition(Vector2.vector(10, 0));
             super.changeDirection(Vector2.vector(0.5f, 0));
         }
     }
 
     public void moveBackward() {
         if (super.getPosition().getX() > LEFT_LIMIT) {
-            super.addPosition(Vector2.vector(-15, 0));
+            super.addPosition(Vector2.vector(-10, 0));
             super.changeDirection(Vector2.vector(-0.5f, 0));
         }
     }
 
     public void moveUpwards() {
         if (super.getPosition().getY() > TOP_LIMIT + 90) {
-            super.addPosition(Vector2.vector(0, -15));
+            super.addPosition(Vector2.vector(0, -10));
             super.changeDirection(Vector2.vector(0, -0.5f));
         }
     }
 
     public void moveDownwards() {
         if (super.getPosition().getY() < BOTTOM_LIMIT) {
-            super.addPosition(Vector2.vector(0, 15));
+            super.addPosition(Vector2.vector(0, 10));
             super.changeDirection(Vector2.vector(0, 0.5f));
         }
     }
@@ -68,7 +69,11 @@ public class Spaceship extends GameObject {
     }
 
     public void changeWeapon() {
-        weapons.add(weapons.remove());
+        long millis = System.currentTimeMillis();
+        if (millis - timeLastChange > 200) {
+            weapons.add(weapons.remove());
+            timeLastChange = millis;
+        }
     }
 
     public void hit(int damage) {

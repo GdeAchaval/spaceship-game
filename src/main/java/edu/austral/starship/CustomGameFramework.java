@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CustomGameFramework implements GameFramework, Subject {
     private List<Observer> observers;
-    private int keyCode;
+    private List<Integer> keyCodes;
     private Player player1;
     private PImage ss1;
     private Player player2;
@@ -50,6 +50,7 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     public CustomGameFramework() {
         this.observers = new ArrayList<>();
+        this.keyCodes = new ArrayList<>();
         this.state = GameState.PLAYING;
     }
 
@@ -104,8 +105,12 @@ public class CustomGameFramework implements GameFramework, Subject {
         this.gameOverRenderer = new GameOverRenderer(player1, player2);
     }
 
+
     @Override
     public void draw(PGraphics graphics, float timeSinceLastDraw, Set<Integer> keySet) {
+        this.keyCodes.clear();
+        this.keyCodes.addAll(keySet);
+        notifyObservers();
         switch (this.state) {
             case PLAYING:
                 control();
@@ -123,13 +128,10 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     @Override
     public void keyPressed(KeyEvent event) {
-        this.keyCode = event.getKeyCode();
-        notifyObservers();
     }
 
     @Override
     public void keyReleased(KeyEvent event) {
-
     }
 
     @Override
@@ -147,8 +149,8 @@ public class CustomGameFramework implements GameFramework, Subject {
         observers.forEach(Observer::update);
     }
 
-    public int getKeyCode() {
-        return keyCode;
+    public List<Integer> getKeyCodes() {
+        return keyCodes;
     }
 
     private void control() {
@@ -171,7 +173,7 @@ public class CustomGameFramework implements GameFramework, Subject {
         commands1.put(java.awt.event.KeyEvent.VK_LEFT, player1.getSpaceship()::moveBackward);
         commands1.put(java.awt.event.KeyEvent.VK_DOWN, player1.getSpaceship()::moveDownwards);
         commands1.put(java.awt.event.KeyEvent.VK_UP, player1.getSpaceship()::moveUpwards);
-        commands1.put(java.awt.event.KeyEvent.VK_SHIFT, player1.getSpaceship()::changeWeapon);
+        commands1.put(java.awt.event.KeyEvent.VK_ENTER, player1.getSpaceship()::changeWeapon);
         commands1.put(java.awt.event.KeyEvent.VK_SPACE, shootUtil);
         commands1.put(java.awt.event.KeyEvent.VK_P, this::pause);
         return commands1;

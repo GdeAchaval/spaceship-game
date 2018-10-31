@@ -4,6 +4,7 @@ package edu.austral.starship.controller;
 import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.Observer;
 
+import java.util.List;
 import java.util.Map;
 
 public class PlayerController implements Observer {
@@ -18,7 +19,9 @@ public class PlayerController implements Observer {
 
     @Override
     public void update() {
-        int keyPressed = gameFramework.getKeyCode();
-        if (commands.containsKey(keyPressed)) commands.get(keyPressed).run();
+        List<Integer> keyPressed = gameFramework.getKeyCodes();
+        keyPressed.forEach(key -> {
+            if (commands.containsKey(key)) commands.get(key).run();
+        });
     }
 }
