@@ -18,8 +18,11 @@ public class PhysicsVisitor implements Visitor {
         if (position.getX() < RIGHT_LIMIT &&
                 position.getX() > LEFT_LIMIT &&
                 position.getY() < BOTTOM_LIMIT &&
-                position.getY() > TOP_LIMIT+30) {
-            asteroid.addPosition(asteroid.getDirection());
+                position.getY() > TOP_LIMIT + 80) {
+            int width = asteroid.getShape().getBounds().width;
+            System.out.println(width);
+            float factor = (float) width / 200;
+            asteroid.addPosition(asteroid.getDirection().multiply(1 / factor));
         } else {
             asteroid.destroy();
         }
@@ -31,7 +34,7 @@ public class PhysicsVisitor implements Visitor {
         if (position.getX() < RIGHT_LIMIT &&
                 position.getX() > LEFT_LIMIT &&
                 position.getY() < BOTTOM_LIMIT &&
-                position.getY() > TOP_LIMIT+30) {
+                position.getY() > TOP_LIMIT + 80) {
             bigBullet.addPosition(bigBullet.getDirection().multiply(4f));
         } else {
             bigBullet.destroy();
@@ -44,7 +47,7 @@ public class PhysicsVisitor implements Visitor {
         if (position.getX() < RIGHT_LIMIT &&
                 position.getX() > LEFT_LIMIT &&
                 position.getY() < BOTTOM_LIMIT &&
-                position.getY() > TOP_LIMIT+30) {
+                position.getY() > TOP_LIMIT + 80) {
             smallBullet.addPosition(smallBullet.getDirection().multiply(8f));
         } else {
             smallBullet.destroy();

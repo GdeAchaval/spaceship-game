@@ -47,7 +47,7 @@ public class ElementController {
 
     private void spawn() {
         Random random = new Random();
-        if (random.nextInt(75) == 1) {
+        if (random.nextInt(65) == 1) {
             int posX = random.nextInt(BOTTOM_LIMIT);
             int posY = random.nextInt(RIGHT_LIMIT);
             int size = 50 + random.nextInt(60);

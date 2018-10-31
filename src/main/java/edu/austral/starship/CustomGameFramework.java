@@ -62,8 +62,8 @@ public class CustomGameFramework implements GameFramework, Subject {
 
         Visitor ssCollisionVisitor = new SpaceshipCollisionVisitor();
 
-        Rectangle rect1 = new Rectangle(10, 400, 80, 55);
-        Rectangle rect2 = new Rectangle(1000, 400, 80, 55);
+        Rectangle rect1 = new Rectangle(10, 400, 80, 65);
+        Rectangle rect2 = new Rectangle(1000, 400, 80, 65);
 
         Spaceship spaceship1 = new Spaceship(
                 rect1,
