@@ -33,9 +33,7 @@ public class PlayingRenderer implements Renderer {
         update();
         renderPlayerControls(graphics);
         elementRendererVisitor.setGraphics(graphics);
-        gameObjects.forEach(gameObject -> {
-            gameObject.accepts(elementRendererVisitor);
-        });
+        gameObjects.forEach(gameObject -> gameObject.accepts(elementRendererVisitor));
     }
 
     private void update() {
@@ -45,13 +43,15 @@ public class PlayingRenderer implements Renderer {
     private void renderPlayerControls(PGraphics graphics) {
         drawSeparator(graphics);
         drawHeartsPlayer1(graphics);
+        drawScorePlayer1(graphics);
         drawHeartsPlayer2(graphics);
+        drawScorePlayer2(graphics);
     }
 
     private void drawSeparator(PGraphics graphics) {
         graphics.stroke(0, 0, 0);
         graphics.fill(0xA9A9A9, 0.8f);
-        graphics.rect(0, 0, RIGHT_LIMIT+30, 25);
+        graphics.rect(0, 0, RIGHT_LIMIT+30, 50);
     }
 
     private void drawHeartsPlayer1(PGraphics graphics) {
@@ -67,6 +67,10 @@ public class PlayingRenderer implements Renderer {
         graphics.text(text, 10, 22);
     }
 
+    private void drawScorePlayer1(PGraphics graphics) {
+        drawScore(graphics, player1, 10);
+    }
+
     private void drawHeartsPlayer2(PGraphics graphics) {
         graphics.textSize(20);
         graphics.stroke(255, 0, 0);
@@ -77,5 +81,18 @@ public class PlayingRenderer implements Renderer {
             text = text.concat("❤");
         }
         graphics.text(text, RIGHT_LIMIT-130, 22);
+    }
+
+    private void drawScorePlayer2(PGraphics graphics) {
+        drawScore(graphics, player2, RIGHT_LIMIT-70);
+    }
+
+    private void drawScore(PGraphics graphics, Player player1, int i) {
+        graphics.textSize(20);
+        graphics.stroke(0, 0, 255);
+        graphics.fill(0, 0, 255);
+        int health = player1.getScore();
+        String text = "Score: " + health;
+        graphics.text(text, i, 45);
     }
 }

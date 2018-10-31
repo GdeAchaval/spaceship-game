@@ -3,7 +3,6 @@ package edu.austral.starship.model.spaceship;
 
 import edu.austral.starship.Visitor;
 import edu.austral.starship.base.vector.Vector2;
-import edu.austral.starship.controller.ElementController;
 import edu.austral.starship.model.GameObject;
 import edu.austral.starship.model.bullet.Bullet;
 import edu.austral.starship.model.weapon.CoreWeapon;
@@ -23,19 +22,9 @@ public class Spaceship extends GameObject {
     private int player;
     private int health;
 
-
-    public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player) {
-        super(shape, position, collisionVisitor);
-        this.weapons = new LinkedList<>();
-        addWeapon(new CoreWeapon(this));
-        this.player = player;
-        this.health = INITIAL_HEALTH;
-    }
-
     public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player, Vector2 direction) {
         super(shape, position, collisionVisitor, direction);
         this.weapons = new LinkedList<>();
-        addWeapon(new CoreWeapon(this));
         this.player = player;
         this.health = INITIAL_HEALTH;
     }
@@ -55,7 +44,7 @@ public class Spaceship extends GameObject {
     }
 
     public void moveUpwards() {
-        if (super.getPosition().getY() > TOP_LIMIT+70) {
+        if (super.getPosition().getY() > TOP_LIMIT + 70) {
             super.addPosition(Vector2.vector(0, -15));
             super.changeDirection(Vector2.vector(0, -0.5f));
         }
@@ -85,7 +74,7 @@ public class Spaceship extends GameObject {
 
     public void hit(int damage) {
         this.health -= damage;
-        if(damage <= 0) destroy();
+        if (getHealth() <= 0) destroy();
     }
 
     public int getHealth() {

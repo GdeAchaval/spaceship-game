@@ -15,14 +15,6 @@ public abstract class GameObject implements Collisionable<GameObject>, Element {
     private Vector2 direction;
     private Visitor collisionVisitor;
 
-    public GameObject(Shape shape, Vector2 position, Visitor collisionVisitor) {
-        this.shape = shape;
-        this.position = position;
-        this.collisionVisitor = collisionVisitor;
-        this.active = true;
-        this.direction = Vector2.vector(1, 0);
-    }
-
     public GameObject(Shape shape, Vector2 position, Visitor collisionVisitor, Vector2 direction) {
         this.shape = shape;
         this.position = position;
@@ -59,7 +51,7 @@ public abstract class GameObject implements Collisionable<GameObject>, Element {
         return active;
     }
 
-    protected void changeDirection(Vector2 vector) {
+    public void changeDirection(Vector2 vector) {
         float angle = this.direction.add(vector).angle();
         this.direction = Vector2.vectorFromModule(1, angle);
     }

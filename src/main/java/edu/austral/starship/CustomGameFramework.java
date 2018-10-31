@@ -11,6 +11,8 @@ import edu.austral.starship.model.Player;
 import edu.austral.starship.model.bullet.Bullet;
 import edu.austral.starship.model.spaceship.Spaceship;
 import edu.austral.starship.model.weapon.BoostedWeapon;
+import edu.austral.starship.model.weapon.CoreWeapon;
+import edu.austral.starship.model.weapon.RapidFireWeapon;
 import edu.austral.starship.render.ElementRendererVisitor;
 import edu.austral.starship.render.PauseRenderer;
 import edu.austral.starship.render.PlayingRenderer;
@@ -50,16 +52,14 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     public CustomGameFramework() {
         this.observers = new ArrayList<>();
+        this.state = GameState.PLAYING;
     }
 
     @Override
     public void setup(WindowSettings windowsSettings, ImageLoader imageLoader) {
         windowsSettings.enableHighPixelDensity();
         windowsSettings.fullScreen();
-
-        this.state = GameState.PLAYING;
-
-        this.elementController = new ElementController();
+        loadImages(imageLoader);
 
         Visitor ssCollisionVisitor = new SpaceshipCollisionVisitor();
 
@@ -70,8 +70,8 @@ public class CustomGameFramework implements GameFramework, Subject {
                 rect1,
                 Vector2.vector(rect1.x + (rect1.width / 2), rect1.y + (rect1.height / 2)),
                 ssCollisionVisitor,
-                1);
-        spaceship1.addWeapon(new BoostedWeapon(spaceship1));
+                1,
+                Vector2.vector(1, 0));
         Spaceship spaceship2 = new Spaceship(
                 rect2,
                 Vector2.vector(rect2.x + (rect2.width / 2), rect2.y + (rect2.height / 2)),
@@ -82,6 +82,15 @@ public class CustomGameFramework implements GameFramework, Subject {
         this.player2 = new Player(spaceship2);
         this.player1 = new Player(spaceship1);
 
+        spaceship1.addWeapon(new CoreWeapon(spaceship1, player1));
+        spaceship1.addWeapon(new BoostedWeapon(spaceship1, player1));
+        spaceship2.addWeapon(new CoreWeapon(spaceship2, player2));
+        spaceship2.addWeapon(new RapidFireWeapon(spaceship2, player2));
+
+        this.elementController = new ElementController();
+        elementController.addGameObject(spaceship1);
+        elementController.addGameObject(spaceship2);
+
         ShootUtil shootUtilPlayer1 = new ShootUtil(elementController, player1);
         ShootUtil shootUtilPlayer2 = new ShootUtil(elementController, player2);
 
@@ -91,30 +100,65 @@ public class CustomGameFramework implements GameFramework, Subject {
         observers.add(playerController);
         observers.add(playerController2);
 
-        loadImages(imageLoader);
-
         ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
         this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController, player1, player2);
         this.pauseRenderer = new PauseRenderer();
-
-        elementController.addGameObject(spaceship1);
-        elementController.addGameObject(spaceship2);
     }
 
-    private static class ShootUtil implements Runnable {
-        final ElementController elementController;
-        final Player player;
-
-        private ShootUtil(ElementController elementController, Player player) {
-            this.elementController = elementController;
-            this.player = player;
+    @Override
+    public void draw(PGraphics graphics, float timeSinceLastDraw, Set<Integer> keySet) {
+        switch (this.state) {
+            case PLAYING:
+                control();
+                loadBG(graphics);
+                playingRenderer.render(graphics);
+                break;
+            case PAUSE:
+                pauseRenderer.render(graphics);
+                break;
         }
 
-        @Override
-        public void run() {
-            Bullet shoot = player.getSpaceship().shoot();
-            elementController.addGameObject(shoot);
-        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent event) {
+        this.keyCode = event.getKeyCode();
+        notifyObservers();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent event) {
+
+    }
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void dettach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        observers.forEach(Observer::update);
+    }
+
+    public int getKeyCode() {
+        return keyCode;
+    }
+
+    private void control() {
+        elementController.control();
+    }
+
+    private void loadBG(PGraphics graphics) {
+        //graphics.beginDraw();
+        graphics.background(255, 255, 255);
+        //graphics.image(this.bg, 0, 0, 2048, 1152);
+        //graphics.endDraw();
     }
 
     private Map<Integer, Runnable> commandsPlayer1(ShootUtil shootUtil) {
@@ -150,67 +194,27 @@ public class CustomGameFramework implements GameFramework, Subject {
         this.bg = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/bg.png");
     }
 
-    @Override
-    public void draw(PGraphics graphics, float timeSinceLastDraw, Set<Integer> keySet) {
-        switch (this.state) {
-            case PLAYING:
-                control();
-                loadBG(graphics);
-                playingRenderer.render(graphics);
-                break;
-            case PAUSE:
-                pauseRenderer.render(graphics);
-                break;
-        }
-
-    }
-
-    private void control() {
-        elementController.control();
-    }
-
-    private void loadBG(PGraphics graphics) {
-        //graphics.beginDraw();
-        graphics.background(255, 255, 255);
-        //graphics.image(this.bg, 0, 0, 2048, 1152);
-        //graphics.endDraw();
-    }
-
-    @Override
-    public void keyPressed(KeyEvent event) {
-        this.keyCode = event.getKeyCode();
-        notifyObservers();
-    }
-
-    @Override
-    public void keyReleased(KeyEvent event) {
-
-    }
-
-    @Override
-    public void attach(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void dettach(Observer observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        observers.forEach(Observer::update);
-    }
-
-    public int getKeyCode() {
-        return keyCode;
-    }
-
     private void pause() {
         if (this.state == GameState.PLAYING) {
             this.state = GameState.PAUSE;
         } else {
             this.state = GameState.PLAYING;
+        }
+    }
+
+    private static class ShootUtil implements Runnable {
+        final ElementController elementController;
+        final Player player;
+
+        private ShootUtil(ElementController elementController, Player player) {
+            this.elementController = elementController;
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+            Bullet shoot = player.getSpaceship().shoot();
+            if (shoot != null) elementController.addGameObject(shoot);
         }
     }
 }

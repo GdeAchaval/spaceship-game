@@ -8,10 +8,6 @@ import java.awt.*;
 
 public class Asteroid extends GameObject {
 
-    public Asteroid(Shape shape, Vector2 position, Visitor collisionVisitor) {
-        super(shape, position, collisionVisitor);
-    }
-
     public Asteroid(Shape shape, Vector2 position, Visitor collisionVisitor, Vector2 direction) {
         super(shape, position, collisionVisitor, direction);
     }

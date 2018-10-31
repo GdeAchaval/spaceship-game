@@ -8,10 +8,6 @@ import java.awt.*;
 
 public class BigBullet extends Bullet {
 
-    public BigBullet(Shape shape, Vector2 position, Visitor collisionVisitor) {
-        super(shape, position, collisionVisitor);
-    }
-
     public BigBullet(Shape shape, Vector2 position, Visitor collisionVisitor, Vector2 direction) {
         super(shape, position, collisionVisitor, direction);
     }

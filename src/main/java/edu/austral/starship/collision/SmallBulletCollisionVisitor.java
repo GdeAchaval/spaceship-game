@@ -5,15 +5,23 @@ import edu.austral.starship.model.Asteroid;
 import edu.austral.starship.model.bullet.BigBullet;
 import edu.austral.starship.model.bullet.SmallBullet;
 import edu.austral.starship.model.spaceship.Spaceship;
+import edu.austral.starship.model.weapon.Weapon;
 
 
 public class SmallBulletCollisionVisitor implements Visitor {
 
     private final static int SMALLB_DAMAGE = 50;
+    private Weapon weapon;
+
+    public SmallBulletCollisionVisitor(Weapon weapon) {
+        this.weapon = weapon;
+    }
 
     @Override
     public void visitAsteroid(Asteroid asteroid) {
         asteroid.destroy();
+        this.weapon.getPlayer().addScore(1);
+
     }
 
     @Override
@@ -29,6 +37,6 @@ public class SmallBulletCollisionVisitor implements Visitor {
     @Override
     public void visitSpaceship(Spaceship spaceship) {
         spaceship.hit(SMALLB_DAMAGE);
-        if(spaceship.getHealth() <= 0) spaceship.destroy();
+        this.weapon.getPlayer().addScore(10);
     }
 }

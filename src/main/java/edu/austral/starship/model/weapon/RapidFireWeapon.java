@@ -2,7 +2,7 @@ package edu.austral.starship.model.weapon;
 
 
 import edu.austral.starship.base.vector.Vector2;
-import edu.austral.starship.collision.SmallBulletCollisionVisitor;
+import edu.austral.starship.collision.BigBulletCollisionVisitor;
 import edu.austral.starship.model.Player;
 import edu.austral.starship.model.bullet.Bullet;
 import edu.austral.starship.model.bullet.SmallBullet;
@@ -10,25 +10,25 @@ import edu.austral.starship.model.spaceship.Spaceship;
 
 import java.awt.*;
 
-public class CoreWeapon extends Weapon {
+public class RapidFireWeapon extends Weapon {
 
-    private static final int FIRE_RATE_CORE = 1000;
+    private static final int FIRE_RATE_RAPID = 600;
 
-    public CoreWeapon(Spaceship spaceship, Player player) {
+    public RapidFireWeapon(Spaceship spaceship, Player player) {
         super(spaceship, player);
     }
 
+    @Override
     public Bullet shoot() {
         long lastFired = super.lastFired;
         long elapsedTime = System.currentTimeMillis() - lastFired;
-        if(elapsedTime > FIRE_RATE_CORE) {
+        if (elapsedTime > FIRE_RATE_RAPID) {
             Vector2 position = super.spaceship.getPosition();
             Vector2 direction = super.spaceship.getDirection();
-            super.lastFired = System.currentTimeMillis();
             return new SmallBullet(
                     new Rectangle((int) position.getX(), (int) position.getY(), 10, 10),
                     position.add(direction.multiply(60f)),
-                    new SmallBulletCollisionVisitor(this),
+                    new BigBulletCollisionVisitor(this),
                     direction);
         } else {
             return null;
