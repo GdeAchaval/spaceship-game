@@ -24,8 +24,6 @@ import java.util.List;
 
 public class CustomGameFramework implements GameFramework, Subject {
 
-    // ajustar para muchos players y fijarse que la weapon del segundo jugador está rara...
-
     private List<Observer> observers;
     private List<Integer> keyCodes;
     private List<Player> players;
@@ -89,8 +87,8 @@ public class CustomGameFramework implements GameFramework, Subject {
                 3,
                 Vector2.vector(1, 1));
 
-        Player player1 = new Player(spaceship2);
-        Player player2 = new Player(spaceship1);
+        Player player1 = new Player(spaceship1);
+        Player player2 = new Player(spaceship2);
         Player player3 = new Player(spaceship3);
         this.players.add(player1);
         this.players.add(player2);

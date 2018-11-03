@@ -8,7 +8,6 @@ import java.util.List;
 
 public class GameOverRenderer implements Renderer {
     private List<Player> players;
-    private static String text = "PLAYER ";
 
     public GameOverRenderer(List<Player> players) {
         this.players = players;
@@ -16,14 +15,15 @@ public class GameOverRenderer implements Renderer {
 
     @Override
     public void render(PGraphics graphics) {
+        StringBuilder text = new StringBuilder("PLAYER ");
         graphics.stroke(0, 255, 0);
         graphics.fill(0, 255, 0);
         graphics.background(0, 0, 0);
-        players.forEach(player -> {
+        for (Player player : players) {
             if (player.getSpaceship().getHealth() <= 0) {
-                text += player.getSpaceship().getPlayer();
+                text.append(player.getSpaceship().getPlayer());
             }
-        });
+        }
         graphics.text(text + " DIED!", 550, 400);
     }
 }
