@@ -19,13 +19,15 @@ public class ElementRendererVisitor implements Visitor {
     private PGraphics graphics;
     private PImage ss1;
     private PImage ss2;
+    private PImage ss3;
     private PImage smallbullet;
     private PImage bigbullet;
     private PImage asteroid;
 
-    public ElementRendererVisitor(PImage ss1, PImage ss2, PImage smallbullet, PImage bigbullet, PImage asteroid) {
+    public ElementRendererVisitor(PImage ss1, PImage ss2, PImage ss3, PImage smallbullet, PImage bigbullet, PImage asteroid) {
         this.ss1 = ss1;
         this.ss2 = ss2;
+        this.ss3 = ss3;
         this.smallbullet = smallbullet;
         this.bigbullet = bigbullet;
         this.asteroid = asteroid;
@@ -102,6 +104,10 @@ public class ElementRendererVisitor implements Visitor {
         if (player == 2) {
             graphics.image(this.ss2, 0, 0, width, width);
         }
+        if (player == 3) {
+            graphics.image(this.ss3, 0, 0, width, width);
+        }
+
         graphics.endDraw();
         graphics.popMatrix();
     }

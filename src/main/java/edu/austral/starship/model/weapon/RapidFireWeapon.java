@@ -14,8 +14,8 @@ public class RapidFireWeapon extends Weapon {
 
     private static final int FIRE_RATE_RAPID = 600;
 
-    public RapidFireWeapon(Spaceship spaceship, Player player) {
-        super(spaceship, player);
+    public RapidFireWeapon(Player player) {
+        super(player.getSpaceship(), player);
     }
 
     @Override

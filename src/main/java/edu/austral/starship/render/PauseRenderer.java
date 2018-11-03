@@ -3,7 +3,7 @@ package edu.austral.starship.render;
 
 import processing.core.PGraphics;
 
-public class PauseRenderer implements Renderer{
+public class PauseRenderer implements Renderer {
 
     @Override
     public void render(PGraphics graphics) {

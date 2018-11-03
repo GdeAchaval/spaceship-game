@@ -14,8 +14,8 @@ public class CoreWeapon extends Weapon {
 
     private static final int FIRE_RATE_CORE = 1000;
 
-    public CoreWeapon(Spaceship spaceship, Player player) {
-        super(spaceship, player);
+    public CoreWeapon(Player player) {
+        super(player.getSpaceship(), player);
     }
 
     public Bullet shoot() {

@@ -23,12 +23,15 @@ import java.util.*;
 import java.util.List;
 
 public class CustomGameFramework implements GameFramework, Subject {
+
+    // ajustar para muchos players y fijarse que la weapon del segundo jugador está rara...
+
     private List<Observer> observers;
     private List<Integer> keyCodes;
-    private Player player1;
+    private List<Player> players;
     private PImage ss1;
-    private Player player2;
     private PImage ss2;
+    private PImage ss3;
 
     private PImage smallbullet;
     private PImage bigbullet;
@@ -46,11 +49,14 @@ public class CustomGameFramework implements GameFramework, Subject {
     public static final int LEFT_LIMIT = 0;
     public static final int TOP_LIMIT = 0;
 
+    private static long LAST_PAUSE = 0;
+
     private GameState state;
 
     public CustomGameFramework() {
         this.observers = new ArrayList<>();
         this.keyCodes = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.state = GameState.PLAYING;
     }
 
@@ -64,45 +70,59 @@ public class CustomGameFramework implements GameFramework, Subject {
 
         Rectangle rect1 = new Rectangle(10, 400, 80, 65);
         Rectangle rect2 = new Rectangle(1000, 400, 80, 65);
+        Rectangle rect3 = new Rectangle(500, 200, 80, 65);
 
         Spaceship spaceship1 = new Spaceship(
                 rect1,
-                Vector2.vector(rect1.x + (rect1.width / 2), rect1.y + (rect1.height / 2)),
                 ssCollisionVisitor,
                 1,
                 Vector2.vector(1, 0));
         Spaceship spaceship2 = new Spaceship(
                 rect2,
-                Vector2.vector(rect2.x + (rect2.width / 2), rect2.y + (rect2.height / 2)),
                 ssCollisionVisitor,
                 2,
                 Vector2.vector(-1, 0));
 
-        this.player2 = new Player(spaceship2);
-        this.player1 = new Player(spaceship1);
+        Spaceship spaceship3 = new Spaceship(
+                rect3,
+                ssCollisionVisitor,
+                3,
+                Vector2.vector(1, 1));
 
-        spaceship1.addWeapon(new BoostedWeapon(spaceship1, player1));
-        spaceship1.addWeapon(new CoreWeapon(spaceship1, player1));
-        spaceship2.addWeapon(new CoreWeapon(spaceship2, player2));
-        spaceship2.addWeapon(new RapidFireWeapon(spaceship2, player2));
+        Player player1 = new Player(spaceship2);
+        Player player2 = new Player(spaceship1);
+        Player player3 = new Player(spaceship3);
+        this.players.add(player1);
+        this.players.add(player2);
+        this.players.add(player3);
+
+        spaceship1.addWeapon(new BoostedWeapon(player1));
+        spaceship1.addWeapon(new CoreWeapon(player1));
+        spaceship2.addWeapon(new CoreWeapon(player2));
+        spaceship2.addWeapon(new RapidFireWeapon(player2));
+        spaceship3.addWeapon(new CoreWeapon(player3));
 
         this.elementController = new ElementController();
         elementController.addGameObject(spaceship1);
         elementController.addGameObject(spaceship2);
+        elementController.addGameObject(spaceship3);
 
         ShootUtil shootUtilPlayer1 = new ShootUtil(elementController, player1);
         ShootUtil shootUtilPlayer2 = new ShootUtil(elementController, player2);
+        ShootUtil shootUtilPlayer3 = new ShootUtil(elementController, player3);
 
-        PlayerController playerController = new PlayerController(this, commandsPlayer1(shootUtilPlayer1));
-        PlayerController playerController2 = new PlayerController(this, commandsPlayer2(shootUtilPlayer2));
+        PlayerController playerController = new PlayerController(this, commandsPlayer1(shootUtilPlayer1, player1));
+        PlayerController playerController2 = new PlayerController(this, commandsPlayer2(shootUtilPlayer2, player2));
+        PlayerController playerController3 = new PlayerController(this, commandsPlayer3(shootUtilPlayer3, player3));
 
         observers.add(playerController);
         observers.add(playerController2);
+        observers.add(playerController3);
 
-        ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, smallbullet, bigbullet, asteroid);
-        this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController, player1, player2);
+        ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, ss3, smallbullet, bigbullet, asteroid);
+        this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController, this.players);
         this.pauseRenderer = new PauseRenderer();
-        this.gameOverRenderer = new GameOverRenderer(player1, player2);
+        this.gameOverRenderer = new GameOverRenderer(this.players);
     }
 
 
@@ -154,9 +174,11 @@ public class CustomGameFramework implements GameFramework, Subject {
     }
 
     private void control() {
-        if (player1.getSpaceship().getHealth() <= 0 || player2.getSpaceship().getHealth() <= 0) {
-            this.state = GameState.GAME_OVER;
-        }
+        players.forEach(player -> {
+            if (player.getSpaceship().getHealth() <= 0) {
+                this.state = GameState.GAME_OVER;
+            }
+        });
         elementController.control();
     }
 
@@ -167,33 +189,46 @@ public class CustomGameFramework implements GameFramework, Subject {
         //graphics.endDraw();
     }
 
-    private Map<Integer, Runnable> commandsPlayer1(ShootUtil shootUtil) {
+    private Map<Integer, Runnable> commandsPlayer1(ShootUtil shootUtil, Player player) {
         Map<Integer, Runnable> commands1 = new HashMap<>();
-        commands1.put(java.awt.event.KeyEvent.VK_RIGHT, player1.getSpaceship()::moveForward);
-        commands1.put(java.awt.event.KeyEvent.VK_LEFT, player1.getSpaceship()::moveBackward);
-        commands1.put(java.awt.event.KeyEvent.VK_DOWN, player1.getSpaceship()::moveDownwards);
-        commands1.put(java.awt.event.KeyEvent.VK_UP, player1.getSpaceship()::moveUpwards);
-        commands1.put(java.awt.event.KeyEvent.VK_ENTER, player1.getSpaceship()::changeWeapon);
+        commands1.put(java.awt.event.KeyEvent.VK_RIGHT, player.getSpaceship()::moveForward);
+        commands1.put(java.awt.event.KeyEvent.VK_LEFT, player.getSpaceship()::moveBackward);
+        commands1.put(java.awt.event.KeyEvent.VK_DOWN, player.getSpaceship()::moveDownwards);
+        commands1.put(java.awt.event.KeyEvent.VK_UP, player.getSpaceship()::moveUpwards);
+        commands1.put(java.awt.event.KeyEvent.VK_ENTER, player.getSpaceship()::changeWeapon);
         commands1.put(java.awt.event.KeyEvent.VK_SPACE, shootUtil);
         commands1.put(java.awt.event.KeyEvent.VK_P, this::pause);
         return commands1;
     }
 
-    private Map<Integer, Runnable> commandsPlayer2(ShootUtil shootUtil) {
+    private Map<Integer, Runnable> commandsPlayer2(ShootUtil shootUtil, Player player) {
         Map<Integer, Runnable> commands2 = new HashMap<>();
-        commands2.put(java.awt.event.KeyEvent.VK_1, player2.getSpaceship()::moveForward);
-        commands2.put(java.awt.event.KeyEvent.VK_2, player2.getSpaceship()::moveBackward);
-        commands2.put(java.awt.event.KeyEvent.VK_3, player2.getSpaceship()::moveDownwards);
-        commands2.put(java.awt.event.KeyEvent.VK_4, player2.getSpaceship()::moveUpwards);
-        commands2.put(java.awt.event.KeyEvent.VK_TAB, player2.getSpaceship()::changeWeapon);
-        commands2.put(java.awt.event.KeyEvent.VK_5, shootUtil);
+        commands2.put(java.awt.event.KeyEvent.VK_D, player.getSpaceship()::moveForward);
+        commands2.put(java.awt.event.KeyEvent.VK_A, player.getSpaceship()::moveBackward);
+        commands2.put(java.awt.event.KeyEvent.VK_S, player.getSpaceship()::moveDownwards);
+        commands2.put(java.awt.event.KeyEvent.VK_W, player.getSpaceship()::moveUpwards);
+        commands2.put(java.awt.event.KeyEvent.VK_TAB, player.getSpaceship()::changeWeapon);
+        commands2.put(java.awt.event.KeyEvent.VK_X, shootUtil);
         commands2.put(java.awt.event.KeyEvent.VK_Q, this::pause);
         return commands2;
+    }
+
+    private Map<Integer, Runnable> commandsPlayer3(ShootUtil shootUtil, Player player) {
+        Map<Integer, Runnable> commands3 = new HashMap<>();
+        commands3.put(java.awt.event.KeyEvent.VK_J, player.getSpaceship()::moveForward);
+        commands3.put(java.awt.event.KeyEvent.VK_G, player.getSpaceship()::moveBackward);
+        commands3.put(java.awt.event.KeyEvent.VK_H, player.getSpaceship()::moveDownwards);
+        commands3.put(java.awt.event.KeyEvent.VK_Y, player.getSpaceship()::moveUpwards);
+        commands3.put(java.awt.event.KeyEvent.VK_7, player.getSpaceship()::changeWeapon);
+        commands3.put(java.awt.event.KeyEvent.VK_T, shootUtil);
+        commands3.put(java.awt.event.KeyEvent.VK_B, this::pause);
+        return commands3;
     }
 
     private void loadImages(ImageLoader imageLoader) {
         this.ss1 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss1.png");
         this.ss2 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss2.png");
+        this.ss3 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss3.png");
         this.smallbullet = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/smallbullet.png");
         this.bigbullet = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/bigbullet.png");
         this.asteroid = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/asteroid.png");
@@ -201,10 +236,19 @@ public class CustomGameFramework implements GameFramework, Subject {
     }
 
     private void pause() {
-        if (this.state == GameState.PLAYING) {
-            this.state = GameState.PAUSE;
-        } else if (this.state == GameState.PAUSE) {
-            this.state = GameState.PLAYING;
+        long current = System.currentTimeMillis();
+        if(current - LAST_PAUSE > 800) {
+            switch (this.state) {
+                case PLAYING:
+                    this.state = GameState.PAUSE;
+                    break;
+                case PAUSE:
+                    this.state = GameState.PLAYING;
+                    break;
+                default:
+                    break;
+            }
+            LAST_PAUSE = current;
         }
     }
 

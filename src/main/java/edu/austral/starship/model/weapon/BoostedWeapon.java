@@ -13,8 +13,8 @@ public class BoostedWeapon extends Weapon {
 
     private static final int FIRE_RATE_BOOST = 2000;
 
-    public BoostedWeapon(Spaceship spaceship, Player player) {
-        super(spaceship, player);
+    public BoostedWeapon(Player player) {
+        super(player.getSpaceship(), player);
     }
 
     public Bullet shoot() {

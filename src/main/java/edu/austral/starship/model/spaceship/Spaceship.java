@@ -22,8 +22,8 @@ public class Spaceship extends GameObject {
     private int player;
     private int health;
 
-    public Spaceship(Shape shape, Vector2 position, Visitor collisionVisitor, int player, Vector2 direction) {
-        super(shape, position, collisionVisitor, direction);
+    public Spaceship(Rectangle shape, Visitor collisionVisitor, int player, Vector2 direction) {
+        super(shape, Vector2.vector(shape.x + (shape.width / 2), shape.y + (shape.height / 2)), collisionVisitor, direction);
         this.weapons = new LinkedList<>();
         this.player = player;
         this.health = INITIAL_HEALTH;

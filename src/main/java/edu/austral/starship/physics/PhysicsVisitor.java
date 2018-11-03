@@ -20,7 +20,6 @@ public class PhysicsVisitor implements Visitor {
                 position.getY() < BOTTOM_LIMIT &&
                 position.getY() > TOP_LIMIT + 80) {
             int width = asteroid.getShape().getBounds().width;
-            System.out.println(width);
             float factor = (float) width / 200;
             asteroid.addPosition(asteroid.getDirection().multiply(1 / factor));
         } else {

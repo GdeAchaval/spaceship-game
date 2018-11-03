@@ -16,16 +16,13 @@ public class PlayingRenderer implements Renderer {
     private ElementRendererVisitor elementRendererVisitor;
     private List<GameObject> gameObjects;
     private ElementController elementController;
-    private Player player1;
-    private Player player2;
+    private List<Player> players;
 
-
-    public PlayingRenderer(ElementRendererVisitor elementRendererVisitor, ElementController elementController, Player player1, Player player2) {
+    public PlayingRenderer(ElementRendererVisitor elementRendererVisitor, ElementController elementController, List<Player> players) {
         this.gameObjects = new ArrayList<>();
         this.elementController = elementController;
         this.elementRendererVisitor = elementRendererVisitor;
-        this.player1 = player1;
-        this.player2 = player2;
+        this.players = players;
     }
 
     @Override
@@ -42,57 +39,43 @@ public class PlayingRenderer implements Renderer {
 
     private void renderPlayerControls(PGraphics graphics) {
         drawSeparator(graphics);
-        drawHeartsPlayer1(graphics);
-        drawScorePlayer1(graphics);
-        drawHeartsPlayer2(graphics);
-        drawScorePlayer2(graphics);
+        drawHearts(graphics);
+        drawScore(graphics);
     }
 
     private void drawSeparator(PGraphics graphics) {
         graphics.stroke(0, 0, 0);
         graphics.fill(0xA9A9A9, 0.8f);
-        graphics.rect(0, 0, RIGHT_LIMIT+30, 50);
+        graphics.rect(0, 0, RIGHT_LIMIT + 30, 50);
     }
 
-    private void drawHeartsPlayer1(PGraphics graphics) {
+    private void drawHearts(PGraphics graphics) {
         graphics.textSize(20);
         graphics.stroke(255, 0, 0);
         graphics.fill(255, 0, 0);
-        String text = "";
-        int health = player1.getSpaceship().getHealth();
-        for (int i = 0; i < health; i+=INITIAL_HEALTH/5) {
-            text = text.concat("❤");
+
+        for (int i = 0; i < players.size(); i++) {
+            int x = 10 + i * 180;
+            Player player = players.get(i);
+            String text = i + " ";
+            int health = player.getSpaceship().getHealth();
+            for (int j = 0; j < health; j += INITIAL_HEALTH / 5) {
+                text = text.concat("❤");
+            }
+            graphics.text(text, x, 22);
         }
-        text = text.concat("  " + Integer.toString(health));
-        graphics.text(text, 10, 22);
     }
 
-    private void drawScorePlayer1(PGraphics graphics) {
-        drawScore(graphics, player1, 10);
-    }
-
-    private void drawHeartsPlayer2(PGraphics graphics) {
-        graphics.textSize(20);
-        graphics.stroke(255, 0, 0);
-        graphics.fill(255, 0, 0);
-        int health = player2.getSpaceship().getHealth();
-        String text = health + "  ";
-        for (int i = 0; i < health; i+=INITIAL_HEALTH/5) {
-            text = text.concat("❤");
-        }
-        graphics.text(text, RIGHT_LIMIT-130, 22);
-    }
-
-    private void drawScorePlayer2(PGraphics graphics) {
-        drawScore(graphics, player2, RIGHT_LIMIT-70);
-    }
-
-    private void drawScore(PGraphics graphics, Player player1, int i) {
+    private void drawScore(PGraphics graphics) {
         graphics.textSize(20);
         graphics.stroke(0, 0, 255);
         graphics.fill(0, 0, 255);
-        int health = player1.getScore();
-        String text = "Score: " + health;
-        graphics.text(text, i, 45);
+        for (int i = 0; i < players.size(); i++) {
+            int x = 10 + i * 180;
+            Player player = players.get(i);
+            int health = player.getScore();
+            String text = "Score: " + health;
+            graphics.text(text, x, 45);
+        }
     }
 }
