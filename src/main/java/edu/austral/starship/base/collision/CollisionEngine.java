@@ -5,9 +5,13 @@ import java.awt.geom.Area;
 import java.util.List;
 
 public class CollisionEngine<T extends Collisionable<T>> {
-    private static <T> T head(List<T> list) { return list.get(0);}
+    private static <T> T head(List<T> list) {
+        return list.get(0);
+    }
 
-    private static <T> List<T> tail(List<T> list) { return list.subList(1, list.size());}
+    private static <T> List<T> tail(List<T> list) {
+        return list.subList(1, list.size());
+    }
 
     public void checkCollisions(List<T> collisionables) {
         if (collisionables.isEmpty()) return;
@@ -25,12 +29,12 @@ public class CollisionEngine<T extends Collisionable<T>> {
         if (collisionables.isEmpty()) return;
 
         collisionables
-            .forEach(collisionable -> {
-                if (testIntersection(current.getShape(), collisionable.getShape())) {
-                    current.collisionedWith(collisionable);
-                    collisionable.collisionedWith(current);
-                }
-            });
+                .forEach(collisionable -> {
+                    if (testIntersection(current.getShape(), collisionable.getShape())) {
+                        current.collisionedWith(collisionable);
+                        collisionable.collisionedWith(current);
+                    }
+                });
 
         checkCollisions(head(collisionables), tail(collisionables));
     }

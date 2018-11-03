@@ -42,7 +42,7 @@ public class ElementRendererVisitor implements Visitor {
         int width = bounds.width;
         int height = bounds.height;
         graphics.beginDraw();
-        drawBounds(x, y, width, height);
+        //drawBounds(x, y, width, height);
         graphics.image(this.asteroid, position.getX(), position.getY(), (float) (height * 0.95), (float) (width * 0.95));
         graphics.endDraw();
     }
@@ -56,7 +56,7 @@ public class ElementRendererVisitor implements Visitor {
         int width = bounds.width;
         int height = bounds.height;
         graphics.beginDraw();
-        drawBounds(x, y, width, height);
+        //drawBounds(x, y, width, height);
         rotate(bigBullet, position, width * 3, height * 3, this.bigbullet);
         graphics.endDraw();
     }
@@ -72,7 +72,7 @@ public class ElementRendererVisitor implements Visitor {
 
         graphics.beginDraw();
 
-        drawBounds(x, y, width, height);
+        //drawBounds(x, y, width, height);
         rotate(smallBullet, position, width * 13, height * 13, this.smallbullet);
 
         graphics.endDraw();
@@ -91,7 +91,7 @@ public class ElementRendererVisitor implements Visitor {
 
         graphics.beginDraw();
 
-        drawBounds(x, y, width, height);
+        //drawBounds(x, y, width, height);
 
         graphics.pushMatrix();
         graphics.imageMode(PConstants.CENTER);

@@ -5,7 +5,6 @@ import edu.austral.starship.collision.BigBulletCollisionVisitor;
 import edu.austral.starship.model.Player;
 import edu.austral.starship.model.bullet.BigBullet;
 import edu.austral.starship.model.bullet.Bullet;
-import edu.austral.starship.model.spaceship.Spaceship;
 
 import java.awt.*;
 

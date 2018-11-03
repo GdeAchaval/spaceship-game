@@ -68,7 +68,6 @@ public class CustomGameFramework implements GameFramework, Subject {
 
         Rectangle rect1 = new Rectangle(10, 400, 80, 65);
         Rectangle rect2 = new Rectangle(1000, 400, 80, 65);
-        Rectangle rect3 = new Rectangle(500, 200, 80, 65);
 
         Spaceship spaceship1 = new Spaceship(
                 rect1,
@@ -81,41 +80,28 @@ public class CustomGameFramework implements GameFramework, Subject {
                 2,
                 Vector2.vector(-1, 0));
 
-        Spaceship spaceship3 = new Spaceship(
-                rect3,
-                ssCollisionVisitor,
-                3,
-                Vector2.vector(1, 1));
-
         Player player1 = new Player(spaceship1);
         Player player2 = new Player(spaceship2);
-        Player player3 = new Player(spaceship3);
         this.players.add(player1);
         this.players.add(player2);
-        this.players.add(player3);
 
         spaceship1.addWeapon(new BoostedWeapon(player1));
         spaceship1.addWeapon(new CoreWeapon(player1));
         spaceship2.addWeapon(new CoreWeapon(player2));
         spaceship2.addWeapon(new RapidFireWeapon(player2));
-        spaceship3.addWeapon(new CoreWeapon(player3));
 
         this.elementController = new ElementController();
         elementController.addGameObject(spaceship1);
         elementController.addGameObject(spaceship2);
-        elementController.addGameObject(spaceship3);
 
         ShootUtil shootUtilPlayer1 = new ShootUtil(elementController, player1);
         ShootUtil shootUtilPlayer2 = new ShootUtil(elementController, player2);
-        ShootUtil shootUtilPlayer3 = new ShootUtil(elementController, player3);
 
         PlayerController playerController = new PlayerController(this, commandsPlayer1(shootUtilPlayer1, player1));
         PlayerController playerController2 = new PlayerController(this, commandsPlayer2(shootUtilPlayer2, player2));
-        PlayerController playerController3 = new PlayerController(this, commandsPlayer3(shootUtilPlayer3, player3));
 
         observers.add(playerController);
         observers.add(playerController2);
-        observers.add(playerController3);
 
         ElementRendererVisitor elementRendererVisitor = new ElementRendererVisitor(ss1, ss2, ss3, smallbullet, bigbullet, asteroid);
         this.playingRenderer = new PlayingRenderer(elementRendererVisitor, elementController, this.players);
@@ -172,11 +158,13 @@ public class CustomGameFramework implements GameFramework, Subject {
     }
 
     private void control() {
-        players.forEach(player -> {
-            if (player.getSpaceship().getHealth() <= 0) {
-                this.state = GameState.GAME_OVER;
+        int countAlive = 0;
+        for (Player player : players) {
+            if (player.getSpaceship().getHealth() > 0) {
+                countAlive++;
             }
-        });
+        }
+        if (countAlive <= 1) this.state = GameState.GAME_OVER;
         elementController.control();
     }
 
@@ -211,18 +199,6 @@ public class CustomGameFramework implements GameFramework, Subject {
         return commands2;
     }
 
-    private Map<Integer, Runnable> commandsPlayer3(ShootUtil shootUtil, Player player) {
-        Map<Integer, Runnable> commands3 = new HashMap<>();
-        commands3.put(java.awt.event.KeyEvent.VK_J, player.getSpaceship()::moveForward);
-        commands3.put(java.awt.event.KeyEvent.VK_G, player.getSpaceship()::moveBackward);
-        commands3.put(java.awt.event.KeyEvent.VK_H, player.getSpaceship()::moveDownwards);
-        commands3.put(java.awt.event.KeyEvent.VK_Y, player.getSpaceship()::moveUpwards);
-        commands3.put(java.awt.event.KeyEvent.VK_7, player.getSpaceship()::changeWeapon);
-        commands3.put(java.awt.event.KeyEvent.VK_T, shootUtil);
-        commands3.put(java.awt.event.KeyEvent.VK_B, this::pause);
-        return commands3;
-    }
-
     private void loadImages(ImageLoader imageLoader) {
         this.ss1 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss1.png");
         this.ss2 = imageLoader.load("/Users/GonzaOK/projects/starships/src/main/java/edu/austral/starship/resource/ss2.png");
@@ -235,7 +211,7 @@ public class CustomGameFramework implements GameFramework, Subject {
 
     private void pause() {
         long current = System.currentTimeMillis();
-        if(current - LAST_PAUSE > 800) {
+        if (current - LAST_PAUSE > 800) {
             switch (this.state) {
                 case PLAYING:
                     this.state = GameState.PAUSE;

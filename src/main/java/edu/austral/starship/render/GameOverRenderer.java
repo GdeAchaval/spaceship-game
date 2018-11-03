@@ -20,10 +20,10 @@ public class GameOverRenderer implements Renderer {
         graphics.fill(0, 255, 0);
         graphics.background(0, 0, 0);
         for (Player player : players) {
-            if (player.getSpaceship().getHealth() <= 0) {
+            if (player.getSpaceship().getHealth() > 0) {
                 text.append(player.getSpaceship().getPlayer());
             }
         }
-        graphics.text(text + " DIED!", 550, 400);
+        graphics.text(text + " WINS!", 550, 400);
     }
 }

@@ -19,13 +19,13 @@ public class Spaceship extends GameObject {
     private static long timeLastChange = 0;
 
     private Queue<Weapon> weapons;
-    private int player;
+    private int playerTag;
     private int health;
 
-    public Spaceship(Rectangle shape, Visitor collisionVisitor, int player, Vector2 direction) {
+    public Spaceship(Rectangle shape, Visitor collisionVisitor, int playerTag, Vector2 direction) {
         super(shape, Vector2.vector(shape.x + (shape.width / 2), shape.y + (shape.height / 2)), collisionVisitor, direction);
         this.weapons = new LinkedList<>();
-        this.player = player;
+        this.playerTag = playerTag;
         this.health = INITIAL_HEALTH;
     }
 
@@ -91,6 +91,6 @@ public class Spaceship extends GameObject {
     }
 
     public int getPlayer() {
-        return player;
+        return playerTag;
     }
 }

@@ -6,9 +6,10 @@ import edu.austral.starship.collision.SmallBulletCollisionVisitor;
 import edu.austral.starship.model.Player;
 import edu.austral.starship.model.bullet.Bullet;
 import edu.austral.starship.model.bullet.SmallBullet;
-import edu.austral.starship.model.spaceship.Spaceship;
 
 import java.awt.*;
+
+@SuppressWarnings("Duplicates")
 
 public class CoreWeapon extends Weapon {
 

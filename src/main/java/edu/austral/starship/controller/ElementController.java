@@ -17,6 +17,7 @@ import static edu.austral.starship.CustomGameFramework.RIGHT_LIMIT;
 
 public class ElementController {
     private CollisionEngine<GameObject> collisionEngine;
+    private AsteroidCollisionVisitor asteroidCollisionVisitor;
     private PhysicsVisitor physicsVisitor;
     private List<GameObject> gameObjects;
 
@@ -24,6 +25,7 @@ public class ElementController {
         this.collisionEngine = new CollisionEngine<>();
         this.gameObjects = new ArrayList<>();
         this.physicsVisitor = new PhysicsVisitor();
+        this.asteroidCollisionVisitor = new AsteroidCollisionVisitor();
     }
 
     public void addGameObject(GameObject gameObject) {
@@ -47,14 +49,14 @@ public class ElementController {
 
     private void spawn() {
         Random random = new Random();
-        if (random.nextInt(65) == 1) {
+        if (random.nextInt(55) == 1) {
             int posX = random.nextInt(BOTTOM_LIMIT);
             int posY = random.nextInt(RIGHT_LIMIT);
             int size = 50 + random.nextInt(60);
             int angle = random.nextInt(360);
             Vector2 pos = Vector2.vector(posX, posY);
             Rectangle rectangle = new Rectangle(posX - size / 2, posY - size / 2, size, size);
-            addGameObject(new Asteroid(rectangle, pos, new AsteroidCollisionVisitor(), Vector2.vectorFromModule(1, angle)));
+            addGameObject(new Asteroid(rectangle, pos, this.asteroidCollisionVisitor, Vector2.vectorFromModule(1, angle)));
         }
     }
 
